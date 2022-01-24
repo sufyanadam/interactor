@@ -18,12 +18,11 @@ module Interactor
     def needs_context(*args)
       before_hooks.push -> {
         missing_context = args - context.to_h.keys.map(&:to_sym)
-        missing_keys =  missing_context.reduce([]) do |reduced, key|
+        missing_keys = missing_context.each_with_object([]) do |key, reduced|
           reduced << key
-          reduced
         end
 
-        raise "Missing context: #{missing_keys.join(', ')} in #{self}" if missing_keys.any?
+        raise "Missing context: #{missing_keys.join(", ")} in #{self}" if missing_keys.any?
       }
     end
   end
